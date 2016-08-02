@@ -1,0 +1,98 @@
+DROP TABLE IF EXISTS `m_admin`;
+CREATE TABLE IF NOT EXISTS `m_admin`(
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+	`user` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '用户名',
+	`pwd` CHAR(32) NOT NULL DEFAULT '' COMMENT '密码',
+	`email` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+	`logintime` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录时间',
+	`loginip` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录IP',
+	`createtime` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
+	PRIMARY KEY(`id`),
+	UNIQUE m_admin_user_pwd(`user`,`pwd`),
+	UNIQUE m_admin_user_email(`user`,`email`)
+)ENGINE=InnoDB DEFAULT CHARSET=UTF8;
+INSERT INTO `m_admin`(user,pwd,email,createtime) VALUES('admin',md5('123456'),'1006760526@qq.com',UNIX_TIMESTAMP());
+
+DROP TABLE IF EXISTS `m_member`;
+CREATE TABLE IF NOT EXISTS `m_member`(
+	`uid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+	`username` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '用户名',
+	`userpass` CHAR(32) NOT NULL DEFAULT '' COMMENT '密码',
+	`useremail` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '邮箱',
+	`logintime` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录时间',
+	`loginip` BIGINT UNSIGNED NOT NULL DEFAULT '0' COMMENT '登录IP',
+	`createtime` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
+	UNIQUE m_member_user_pass(`username`,`userpass`),
+	UNIQUE m_member_email_pass(`useremail`,`userpass`),
+	PRIMARY KEY(`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `m_member_profile`;
+CREATE TABLE IF NOT EXISTS `m_member_profile`(
+	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+	`truename` VARCHAR(32) NOT NULL DEFAULT '' COMMENT '真实姓名',
+	`age` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+	`sex` ENUM('0','1','2') NOT NULL DEFAULT '0',
+	`birthday` date NOT NULL DEFAULT '2010-1-1',
+	`nickname` VARCHAR(32) NOT NULL DEFAULT '',
+	`company` VARCHAR(100) NOT NULL DEFAULT '',
+	`uid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`createtime` INT UNSIGNED NOT NULL DEFAULT '0' COMMENT '创建时间',
+	PRIMARY KEY(`id`),
+	UNIQUE m_member_profile_uid(`uid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#商品分类表
+DROP TABLE IF EXISTS `m_category`;
+CREATE TABLE IF NOT EXISTS `m_category`(
+	`cateid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`title` VARCHAR(32) NOT NULL DEFAULT '',
+	`pid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`createtime` INT UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY(`cateid`),
+	KEY m_category_pid(`pid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+#商品表
+DROP TABLE IF EXISTS `m_product`;
+CREATE TABLE IF NOT EXISTS `m_product`(
+	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`cateid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`title` VARCHAR(200) NOT NULL DEFAULT '',
+	`desc` TEXT,
+	`num` INT UNSIGNED NOT NULL DEFAULT '0',
+	`price` DECIMAL(10,2) NOT NULL DEFAULT '00000000.00',
+	`cover` VARCHAR(200) NOT NULL DEFAULT '0',
+	`pics` TEXT,
+	`issale` ENUM('0','1') NOT NULL DEFAULT '0',
+	`saleprice` DECIMAL(10,2) NOT NULL DEFAULT '00000000.00',
+	`ishot` ENUM('0','1') NOT NULL DEFAULT '0',
+	`createtime` INT UNSIGNED NOT NULL DEFAULT '0',
+	PRIMARY KEY(`id`),
+	KEY m_product_cateid(`cateid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `m_cart`;
+CREATE TABLE IF NOT EXISTS `m_cart`(
+	`cartid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`productid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`productnum` INT UNSIGNED NOT NULL DEFAULT '0',
+	`price` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+	`uid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+	`createtime` INT UNSIGNED NOT NULL DEFAULT '0',
+	KEY m_cart_productid(`productid`),
+	KEY m_cart_uid(`uid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

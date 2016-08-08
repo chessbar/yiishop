@@ -18,11 +18,11 @@
     <div class="col-xs-12 col-lg-8">
         <ul>
         <?php foreach($top['_son'] as $second):?>
-            <li><a href="#"><?php echo $second['title'];?></a>   
+            <li><a href="<?php echo yii\helpers\Url::to(['product/index','cateid'=>$second['cateid']])?>"><?php echo $second['title'];?></a>
             <?php if(!empty($second['_son'])):?>
                 <span class="line">|</span>
             <?php foreach($second['_son'] as $third):?>
-                <a href=""><?php echo $third['title'];?></a>
+                <a href="<?php echo yii\helpers\Url::to(['product/index','cateid'=>$third['cateid']])?>"><?php echo $third['title'];?></a>
             <?php endforeach;?>
             <?php endif;?>
             </li>
@@ -141,8 +141,8 @@
                 <div class="tab-pane active" id="featured">
                     <div class="product-grid-holder">
                     <?php 
-                    if(!empty($products)):
-                        foreach($products as $product):
+                    if(!empty($this->params['recProducts'])):
+                        foreach($this->params['recProducts'] as $product):
                     ?>
                         <div class="col-sm-4 col-md-3  no-margin product-item-holder hover">
                             <div class="product-item">
@@ -152,14 +152,15 @@
                                 <?php if((time()-$product->updatetime)<86400*2):?>
                                 <div class="ribbon blue"><span>new!</span></div> 
                                 <?php endif;?>
-                                <?php if($product->isrecommend):?>
-                                <div class="ribbon green"><span>bestseller</span></div>
-                                <?php endif;?>
                                 <div class="image">
                                     <img alt="" src="<?php echo $product->cover;?>-covermiddle" data-echo="<?php echo $product->cover;?>-covermiddle"/>
                                 </div>
                                 <div class="body">
-                                    <div class="label-discount green">-50% sale</div>
+                                    <?php if($product->issale):
+                                        $sale = floor(($product->price-$product->saleprice)/$product->price*100);
+                                        ?>
+                                        <div class="label-discount green">-<?php echo $sale;?>% sale</div>
+                                    <?php endif;?>
                                     <div class="title">
                                         <a href="<?php echo yii\helpers\Url::to(['product/index','productid'=>$product->id]);?>">
                                             <?php echo $product->title;?>
@@ -171,16 +172,17 @@
                                     <?php 
                                         if($product->issale):
                                     ?>
-                                    <div class="price-prev">￥<?php $product->price;?></div>
-                                    <div class="price-current pull-right">￥<?php $product->saleprice;?></div>
+                                    <div class="price-prev">￥<?php echo $product->price;?></div>
+                                    <div class="price-current pull-right">￥<?php echo $product->saleprice;?></div>
                                     <?php else:?>
-                                       <div class="price-current pull-right">￥<?php $product->price;?></div> 
+                                            <div class="price-prev"></div>
+                                       <div class="price-current pull-right">￥<?php echo $product->price;?></div>
                                     <?php endif;?>
                                 </div>
 
                                 <div class="hover-area">
                                     <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
+                                        <a href="<?php echo yii\helpers\Url::to(['cart/add','productid'=>$product->id]);?>" class="le-button">加入购物车</a>
                                     </div>
                                 </div>
                             </div>
@@ -199,126 +201,57 @@
                 </div>
                 <div class="tab-pane" id="new-arrivals">
                     <div class="product-grid-holder">
-                        
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-                                <div class="ribbon blue"><span>new!</span></div> 
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-02.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount clear"></div>
-                                    <div class="title">
-                                        <a href="single-product.html">White lumia 9001</a>
-                                    </div>
-                                    <div class="brand">nokia</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-                                <div class="ribbon red"><span>sale</span></div> 
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-01.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount green">-50% sale</div>
-                                    <div class="title">
-                                        <a href="single-product.html">VAIO Fit Laptop - Windows 8 SVF14322CXW</a>
-                                    </div>
-                                    <div class="brand">sony</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
+                        <?php
+                        if(!empty($this->params['newProducts'])):
+                            foreach($this->params['newProducts'] as $product):
+                                ?>
+                                <div class="col-sm-4 col-md-3  no-margin product-item-holder hover">
+                                    <div class="product-item">
+                                        <?php if($product->issale):?>
+                                            <div class="ribbon red"><span>sale</span></div>
+                                        <?php endif;?>
+                                        <?php if($product->isrecommend):?>
+                                            <div class="ribbon green"><span>bestseller</span></div>
+                                        <?php endif;?>
+                                        <div class="image">
+                                            <img alt="" src="<?php echo $product->cover;?>-covermiddle" data-echo="<?php echo $product->cover;?>-covermiddle"/>
+                                        </div>
+                                        <div class="body">
+                                            <?php if($product->issale):
+                                                $sale = floor(($product->price-$product->saleprice)/$product->price*100);
+                                                ?>
+                                                <div class="label-discount green">-<?php echo $sale;?>% sale</div>
+                                            <?php endif;?>
+                                            <div class="title">
+                                                <a href="<?php echo yii\helpers\Url::to(['product/index','productid'=>$product->id]);?>">
+                                                    <?php echo $product->title;?>
+                                                </a>
+                                            </div>
+                                            <div class="brand">sony</div>
+                                        </div>
+                                        <div class="prices">
+                                            <?php
+                                            if($product->issale):
+                                                ?>
+                                                <div class="price-prev">￥<?php echo $product->price;?></div>
+                                                <div class="price-current pull-right">￥<?php echo $product->saleprice;?></div>
+                                            <?php else:?>
+                                                <div class="price-prev"></div>
+                                                <div class="price-current pull-right">￥<?php echo $product->price;?></div>
+                                            <?php endif;?>
+                                        </div>
 
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
+                                        <div class="hover-area">
+                                            <div class="add-cart-button">
+                                                <a href="<?php echo yii\helpers\Url::to(['cart/add','productid'=>$product->id]);?>" class="le-button">加入购物车</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-                                <div class="ribbon red"><span>sale</span></div> 
-                                <div class="ribbon green"><span>bestseller</span></div> 
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-04.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount clear"></div>
-                                    <div class="title">
-                                        <a href="single-product.html">Netbook Acer TravelMate 
-                                            B113-E-10072</a>
-                                    </div>
-                                    <div class="brand">acer</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-03.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount clear"></div>
-                                    <div class="title">
-                                        <a href="single-product.html">POV Action Cam</a>
-                                    </div>
-                                    <div class="brand">sony</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                            <?php endforeach;?>
+                        <?php else:?>
+                            没有找到相关商品！
+                        <?php endif;?>
                     </div>
                     <div class="loadmore-holder text-center">
                         <a class="btn-loadmore" href="#">
@@ -330,123 +263,57 @@
 
                 <div class="tab-pane" id="top-sales">
                     <div class="product-grid-holder">
+                        <?php
+                        if(!empty($this->params['saleProducts'])):
+                            foreach($this->params['saleProducts'] as $product):
+                                ?>
+                                <div class="col-sm-4 col-md-3  no-margin product-item-holder hover">
+                                    <div class="product-item">
+                                        <?php if((time()-$product->updatetime)<86400*2):?>
+                                            <div class="ribbon blue"><span>new!</span></div>
+                                        <?php endif;?>
+                                        <?php if($product->isrecommend):?>
+                                            <div class="ribbon green"><span>bestseller</span></div>
+                                        <?php endif;?>
+                                        <div class="image">
+                                            <img alt="" src="<?php echo $product->cover;?>-covermiddle" data-echo="<?php echo $product->cover;?>-covermiddle"/>
+                                        </div>
+                                        <div class="body">
+                                            <?php if($product->issale):
+                                                $sale = floor(($product->price-$product->saleprice)/$product->price*100);
+                                                ?>
+                                                <div class="label-discount green">-<?php echo $sale;?>% sale</div>
+                                            <?php endif;?>
+                                            <div class="title">
+                                                <a href="<?php echo yii\helpers\Url::to(['product/index','productid'=>$product->id]);?>">
+                                                    <?php echo $product->title;?>
+                                                </a>
+                                            </div>
+                                            <div class="brand">sony</div>
+                                        </div>
+                                        <div class="prices">
+                                            <?php
+                                            if($product->issale):
+                                                ?>
+                                                <div class="price-prev">￥<?php echo $product->price;?></div>
+                                                <div class="price-current pull-right">￥<?php echo $product->saleprice;?></div>
+                                            <?php else:?>
+                                                <div class="price-prev"></div>
+                                                <div class="price-current pull-right">￥<?php echo $product->price;?></div>
+                                            <?php endif;?>
+                                        </div>
 
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-                                <div class="ribbon red"><span>sale</span></div> 
-                                <div class="ribbon green"><span>bestseller</span></div> 
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-04.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount clear"></div>
-                                    <div class="title">
-                                        <a href="single-product.html">Netbook Acer TravelMate 
-                                            B113-E-10072</a>
-                                    </div>
-                                    <div class="brand">acer</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
+                                        <div class="hover-area">
+                                            <div class="add-cart-button">
+                                                <a href="<?php echo yii\helpers\Url::to(['cart/add','productid'=>$product->id]);?>" class="le-button">加入购物车</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-03.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount clear"></div>
-                                    <div class="title">
-                                        <a href="single-product.html">POV Action Cam</a>
-                                    </div>
-                                    <div class="brand">sony</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-                                <div class="ribbon blue"><span>new!</span></div> 
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-02.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount clear"></div>
-                                    <div class="title">
-                                        <a href="single-product.html">White lumia 9001</a>
-                                    </div>
-                                    <div class="brand">nokia</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                    <div class="wish-compare">
-                                        <a class="btn-add-to-wishlist" href="#">add to wishlist</a>
-                                        <a class="btn-add-to-compare" href="#">compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-sm-4 col-md-3 no-margin product-item-holder hover">
-                            <div class="product-item">
-                                <div class="ribbon red"><span>sale</span></div> 
-                                <div class="image">
-                                    <img alt="" src="assets/images/blank.gif" data-echo="assets/images/products/product-01.jpg" />
-                                </div>
-                                <div class="body">
-                                    <div class="label-discount green">-50% sale</div>
-                                    <div class="title">
-                                        <a href="single-product.html">VAIO Fit Laptop - Windows 8 SVF14322CXW</a>
-                                    </div>
-                                    <div class="brand">sony</div>
-                                </div>
-                                <div class="prices">
-                                    <div class="price-prev">￥1399.00</div>
-                                    <div class="price-current pull-right">￥1199.00</div>
-                                </div>
-
-                                <div class="hover-area">
-                                    <div class="add-cart-button">
-                                        <a href="single-product.html" class="le-button">加入购物车</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                            <?php endforeach;?>
+                        <?php else:?>
+                            没有找到相关商品！
+                        <?php endif;?>
                     </div>
                     <div class="loadmore-holder text-center">
                         <a class="btn-loadmore" href="#">

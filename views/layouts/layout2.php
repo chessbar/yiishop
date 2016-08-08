@@ -598,6 +598,45 @@
     <script src="assets/js/jquery.customSelect.min.js"></script>
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/scripts.js"></script>
-
+    <script>
+        $(function(){
+            $('.le-quantity a').click(function(e){
+                e.preventDefault();
+                var currentQty= $(this).parent().parent().find('input').val();
+                if( $(this).hasClass('minus') && currentQty>1){
+                    var changeQty = parseInt(currentQty, 10) - 1;
+                    $(this).parent().parent().find('input').val(changeQty);
+                    var pid =$(this).parent().parent().find('input').attr('pid');
+                }else{
+                    if( $(this).hasClass('plus')){
+                        var changeQty=parseInt(currentQty, 10) + 1;
+                        $(this).parent().parent().find('input').val(changeQty);
+                        var pid =$(this).parent().parent().find('input').attr('pid');
+                    }
+                }
+                var url = '<?php echo yii\helpers\Url::to(['cart/add']);?>';
+                $("#addto-cart").attr('href',url+"&productnum="+changeQty+"&productid="+pid);
+            });
+            //
+            $("a.express").hover(function(){
+                var a = $(this);
+                if(a.attr('data') !="ok"){
+                    $.get('<?php echo yii\helpers\Url::to(["order/getexpress"]);?>',{'expressno': a.attr('data')},function(msg){
+                        var str="";
+                        if(msg.message=='ok'){
+                            for(var i=0;i<msg.data.length;i++){
+                                str += '<p>'+msg.data[i].context+' '+msg.data[i].time+'</p>';
+                            }
+                        }
+                        a.find('.expressshow').html(str);
+                        a.attr('data','ok');
+                    },'json');
+                }
+                a.find(".expressshow").show();
+            },function(){
+                $(this).find(".expressshow").hide();
+            })
+        })
+    </script>
 </body>
 </html>

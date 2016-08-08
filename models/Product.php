@@ -8,7 +8,7 @@ class Product extends ActiveRecord
 	const SK='98bYHN3TQCGQzQTi9lPALWgtetVMAQ9rxkL7oMV7';
 	const DOMAIN ='ob7j2k33h.bkt.clouddn.com';
 	const BUCKET ='blackberry';
-	public $isshelve = true;
+	public $cate;
 	public static function tableName()
 	{
 		return "{{%product}}";

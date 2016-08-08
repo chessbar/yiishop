@@ -31,8 +31,19 @@ use yii\helpers\Html;
                             <?php echo $form->field($model,'num')->textInput(['class'=>'span9']);?>
                             <?php echo $form->field($model,'isshelve')->radioList(['1'=>'是','0'=>'否'],['class'=>'span8']);?>
                             <?php echo $form->field($model,'isrecommend')->radioList(['1'=>'是','0'=>'否'],['class'=>'span8']);?>
-                            <?php echo $form->field($model,'cover')->fileInput(['class'=>'span9']);?>
-                            <?php echo $form->field($model,'pics[]')->fileInput(['class'=>'span9',"multiple"=>true]);?>
+                            <?php echo $form->field($model,'cover')->fileInput(['class'=>'span9']);
+                                if(!empty($model->cover)):
+                            ?>
+                            <img src="<?php echo $model->cover?>-covermiddle">
+                                <hr>
+                            <?php
+                                endif;
+                            echo $form->field($model,'pics[]')->fileInput(['class'=>'span9',"multiple"=>true]);
+                            foreach ((array)json_decode($model->pics,true) as $k=>$pic):
+                            ?>
+                                <img src="<?php echo $pic?>-coversmall" alt="">
+                                <a href="<?php echo yii\helpers\Url::to(['product/removepic','key'=>$k,'productid'=>$model->id]);?>">删除</a>
+                                <?php endforeach;?>
                                     <hr>
                                     <input type='button' id="addpic" value='增加一个'>
                                     <div class="span11 field-box actions">

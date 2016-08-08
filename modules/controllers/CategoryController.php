@@ -1,9 +1,9 @@
 <?php 
 namespace app\modules\controllers;
-use yii\web\Controller;
+use app\modules\controllers\CommonController;
 use Yii;
 use app\models\Category;
-class CategoryController extends Controller
+class CategoryController extends CommonController
 {
 	public $layout ="layout1";
 	public function actionCates()

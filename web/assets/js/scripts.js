@@ -310,7 +310,7 @@
         });
 
         // Quantity Spinner
-        $('.le-quantity a').click(function(e){
+        /*$('.le-quantity a').click(function(e){
             e.preventDefault();
             var currentQty= $(this).parent().parent().find('input').val();
             if( $(this).hasClass('minus') && currentQty>1){
@@ -321,7 +321,7 @@
                 }
             }
         });
-
+        */
         // Price Slider
         if ($('.price-slider').length > 0) {
             $('.price-slider').slider({

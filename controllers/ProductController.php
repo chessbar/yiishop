@@ -19,7 +19,7 @@ class ProductController extends CommonController
 		$cateids[]=$cateid;
 		$model = Product::find()->where(['in','cateid',$cateids])->andWhere('isshelve=:isshelve',[':isshelve'=>'1']);
 		$count = $model->count();
-		$pageSize=Yii::$app->params['pageSize']['showRroducts'];
+		$pageSize=Yii::$app->params['pageSize']['showProducts'];
 		$pager = new Pagination(['pageSize'=>$pageSize,'totalCount'=>$count]);
 		$products = $model->orderby('updatetime desc')->offset($pager->offset)->limit($pager->limit)->all();
 		//推荐商品
@@ -40,6 +40,7 @@ class ProductController extends CommonController
 		$detail = Product::find()->where('id=:id and isshelve=:isshelve',[':id'=>$productid,':isshelve'=>'1'])->one();
 		return $this->render("detail",['detail'=>$detail]);
 	}
+
 }
 
 

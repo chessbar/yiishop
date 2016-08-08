@@ -83,7 +83,48 @@ CREATE TABLE IF NOT EXISTS `m_cart`(
 	KEY m_cart_uid(`uid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `m_order`;
+CREATE TABLE IF NOT EXISTS `m_order`(
+  `orderid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `uid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `addressid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `amount` DECIMAL(10,2) NOT NULL DEFAULT '0.00',
+  `status` TINYINT UNSIGNED NOT NULL DEFAULT '0',
+  `expressid` INT UNSIGNED NOT NULL DEFAULT '0',
+  `expressno` VARCHAR(50) NOT NULL DEFAULT '',
+  `createtime` INT UNSIGNED NOT NULL DEFAULT '0',
+  `updatetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  KEY m_order_uid(`uid`),
+  KEY m_order_addressid(`addressid`),
+  KEY m_order_expressid(`expressid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `m_order_detail`;
+CREATE TABLE IF NOT EXISTS `m_order_detail`(
+  `detailid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `productid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `productname` VARCHAR(200) NOT NULL DEFAULT '',
+  `price` DECIMAL(10,2) NOT NULL DEFAULT '0.0',
+  `productnum` INT UNSIGNED NOT NULL DEFAULT '0',
+  `orderid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  KEY m_order_detail_productid(`productid`),
+  KEY m_order_detail_orderid(`orderid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `m_address`;
+CREATE TABLE IF NOT EXISTS `m_address`(
+  `addressid` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `firstname` VARCHAR(32) NOT NULL DEFAULT '',
+  `lasttime` VARCHAR(32) NOT NULL DEFAULT '',
+  `company` VARCHAR(100) NOT NULL DEFAULT '',
+  `address` TEXT,
+  `postcode` CHAR(6) NOT NULL DEFAULT '',
+  `email` VARCHAR(100) NOT NULL DEFAULT '',
+  `telphone` VARCHAR(20) NOT NULL DEFAULT '0',
+  `uid` BIGINT UNSIGNED NOT NULL DEFAULT '0',
+  `createtime` INT UNSIGNED NOT NULL DEFAULT '0',
+  KEY m_address_uid(`uid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 

@@ -9,7 +9,7 @@
 namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
-
+use app\models\Product;
 class Cart extends  ActiveRecord
 {
     public static function tableName()
@@ -23,4 +23,8 @@ class Cart extends  ActiveRecord
             ['createtime','safe']
         ];
     }
+    public function getProduct()
+    {
+        return $this->hasOne(Product::className(),['id'=>'productid']);
+	}
 }

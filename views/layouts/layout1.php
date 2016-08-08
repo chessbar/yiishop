@@ -545,6 +545,45 @@
     <script src="assets/js/jquery.customSelect.min.js"></script>
     <script src="assets/js/wow.min.js"></script>
     <script src="assets/js/scripts.js"></script>
+    <script>
+        $(function(){
+            $('.plus').on('click',function(){
+                var input = $(this).prev('input');
+                var num = parseInt(input.val());
+                var newnum = num+1;
+                input.val(newnum);
+                var cartid = input.attr('id');
+                var price = parseInt($(this).parents('div.cart-item').find('.price span').text());
+                var total = parseInt($('.cart-summary .total-price span').text());
+                var freight =parseInt($('.cart-summary .freight span').text());
+                $('.cart-summary .total-price span').text(total+price);
+                $('.cart-summary .order-price span').text(total+price+freight);
+                changeNum(cartid,newnum);
+            });
+            $('.minus').on('click',function(){
+                var input = $(this).next('input');
+                var num = parseInt(input.val());
+                var newnum = num>=2 ? num -1 : 1;
+                if(num <=1 && newnum <=1) return;
+                input.val(newnum);
+                var cartid = input.attr('id');
+                var price = parseInt($(this).parents('div.cart-item').find('.price span').text());
+                var total = parseInt($('.cart-summary .total-price span').text());
+                var freight =parseInt($('.cart-summary .freight span').text());
+                $('.cart-summary .total-price span').text(total-price);
+                $('.cart-summary .order-price span').text(total-price+freight);
+                changeNum(cartid,newnum);
+            });
+            function changeNum(cartid,num)
+            {
+                $.get('<?php echo yii\helpers\Url::to(['cart/mod']);?>',{'productnum':num,'cartid':cartid},function(){},'json');
+            }
+            //创建联系人
+            $("#createlink").on('click',function(){
+               $(".billing-address").show();
+            })
+        })
+    </script>
 
 </body>
 </html>

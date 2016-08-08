@@ -1,11 +1,11 @@
 <?php 
 namespace app\modules\controllers;
 use Yii;
-use yii\web\Controller;
+use app\modules\controllers\CommonController;
 use app\models\Member;
 use app\models\Member_profile;
 use yii\data\Pagination;
-class UserController extends Controller
+class UserController extends CommonController
 {
 	public function actionUsers()
 	{

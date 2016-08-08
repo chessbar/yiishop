@@ -90,17 +90,13 @@
         </div>
 
         <div class="qnt-holder">
-            <form action="<?php echo yii\helpers\Url::to(['cart/add'])?>" method="post">
             <div class="le-quantity">
 
                     <a class="minus" href="#reduce"></a>
-                    <input name="Card['productnum']" readonly="readonly" type="text" value="1" />
+                    <input name="productnum" readonly="readonly" pid="<?php echo $detail->id;?>" type="text" value="1" />
                     <a class="plus" href="#add"></a>
             </div>
-                <input type="hidden" name="Card['productid']" value="<?php echo $detail->id;?>">
-                <button type="submit" id="addto-cart" class="le-button huge">加入购物车</button>
-            </form>
-
+            <a id="addto-cart" class="le-button huge" href="<?php echo yii\helpers\Url::to(['cart/add','productnum'=>1,'productid'=>$detail->id]);?>">加入购物车</a>
         </div><!-- /.qnt-holder -->
     </div><!-- /.body -->
 

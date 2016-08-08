@@ -39,13 +39,13 @@
                                 <tr class="first">
                                     <td>
                                         <img src="<?php echo $product->cover;?>-coversmall" class="img-circle avatar hidden-phone" />
-                                        <a href="#" class="name"><?php echo $product->title;?></a></td>
+                                        <a href="<?php echo yii\helpers\Url::to(['/product/detail','productid'=>$product->id]);?>" target="_blank" class="name"><?php echo $product->title;?></a></td>
                                     <td><?php echo $product->num;?></td>
                                     <td><?php echo $product->price;?></td>
                                     <td><?php echo $product->ishot ? '热卖' : '不热卖';?></td>
                                     <td><?php echo $product->issale ? '促销' : '不促销';?></td>
                                     <td><?php echo $product->saleprice;?></td>
-                                    <td><?php echo $product->isshelve ? '上架' : '下架';?></td>
+                                    <td><?php echo $product->isshelve=="1" ? '上架' : '下架';?></td>
                                     <td><?php echo $product->isrecommend ? '推荐' : '不推荐';?></td>
                                     <td class="align-right">
                                         <a href="<?php echo yii\helpers\Url::to(['product/mod','productid'=>$product->id]);?>">编辑</a>

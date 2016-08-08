@@ -9,7 +9,13 @@ class CartController extends CommonController
 public $layout = "layout1";
 public function actionIndex()
 {
-	return $this->render("index");
+	if(Yii::$app->session['isLogin'] !=1){
+		return $this->redirect(['member/auth']);
+	}
+	$uid = Yii::$app->session['uid'];
+	//视图
+	$cart= Cart::find()->joinWith('product')->where('uid=:uid',[':uid'=>$uid])->all();
+	return $this->render("index",['cart'=>$cart]);
 }
 public function actionAdd()
 {
@@ -17,25 +23,13 @@ public function actionAdd()
 		return $this->redirect(['member/auth']);
 	}
 	$uid = Yii::$app->session['uid'];
-	echo $uid;
-	exit;
-	if(Yii::$app->request->isPost)
-	{
-		$post = Yii::$app->request->post();
-		var_dump($post);
-		$num=Yii::$app->request->post()['productnum'];
-		$data['Cart']=$post;
-		$data['Cart']['uid']=$uid;
-		$productid=$data['Cart']['productid'];
-	}
 	if(Yii::$app->request->isGet)
 	{
 		$productid = Yii::$app->request->get('productid');
 		$model = Product::find()->where('id=:pid',[':pid'=>$productid])->one();
 		$price = $model->issale ? $model->saleprice : $model->price;
-		$num =1;
+		$num = Yii::$app->request->get('productnum') ? Yii::$app->request->get('productnum') : 1;
 		$data['Cart'] = ['productid'=>$productid,'productnum'=>$num,'price'=>$price,'uid'=>$uid];
-
 	}
 	//
 	if(!$model = Cart::find()->where('productid=:pid and uid=:uid',[':pid'=>$productid,':uid'=>$uid])->one())
@@ -49,4 +43,16 @@ public function actionAdd()
 	$model->save();
 	return $this->redirect(['cart/index']);
 }
+	public function actionMod()
+	{
+		$cartid = Yii::$app->request->get('cartid');
+		$productnum = Yii::$app->request->get('productnum');
+		Cart::updateAll(['productnum'=>$productnum],'cartid=:cartid',[':cartid'=>$cartid]);
+	}
+	public function actionDel()
+	{
+		$cartid = Yii::$app->request->get('cartid');
+		Cart::deleteAll('cartid=:cartid',[':cartid'=>$cartid]);
+		return $this->redirect(['cart/index']);
+	}
 }

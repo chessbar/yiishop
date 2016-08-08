@@ -1,11 +1,11 @@
 <?php 
 namespace app\modules\controllers;
 use Yii;
-use yii\web\Controller;
+use app\modules\controllers\CommonController;
 use app\modules\models\Admin;
 use yii\data\Pagination;
 
-class ManageController extends Controller
+class ManageController extends CommonController
 {
 	public function actionManagers()
 	{
